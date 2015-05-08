@@ -75,7 +75,6 @@ namespace DHXDownloadManager.Tests
             _Tests.Add(new BaseTest<T>(this));
             _Tests.Add(new FailTest<T>(this));
             _Tests.Add(new FailTest02<T>(this));
-            _Tests.Add(new DuplicateTest<T>(this));
             _Tests.Add(new FileStreamTest<T>(this));
             _Tests.Add(new MemoryStreamTest<T>(this));
             _Tests.Add(new SerializationTest<T>(this));
