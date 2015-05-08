@@ -1,4 +1,4 @@
-﻿﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 using UnityEngine;
@@ -48,26 +48,49 @@ namespace DHXDownloadManager
             Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
             string filenametmp = fileName + ".tmp";
             try
-            {
-                // Use a tmp file incase something goes wrong while writing
-                using (FileStream writer = new FileStream(filenametmp, FileMode.Create))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(writer, variable);
-                    writer.Close();
-                }
+			{
 
-                File.Copy(filenametmp, fileName, true);
-                File.Delete(filenametmp);
-            }
-            catch (System.Exception e)
-            {
-                UnityEngine.Debug.LogWarning("Exception: " + fileName + ". " + e);
-            }
-            finally
-            {
+				// Use a tmp file incase something goes wrong while writing
+				FileStream writer = new FileStream(filenametmp, FileMode.Create);
+				{
 
-            }
-        }
+					if(writer != null && writer.CanWrite)
+					{
+
+	                    BinaryFormatter formatter = new BinaryFormatter();
+	                    formatter.Serialize(writer, variable);
+						writer.Close();
+						writer.Dispose();
+					}
+
+				}
+
+				if(File.Exists(filenametmp))
+				{
+
+					if(File.Exists(fileName))
+						File.Delete(fileName);
+					File.Move(filenametmp, fileName);
+
+				}
+			}
+			catch (IOException e)
+			{
+				UnityEngine.Debug.LogWarning("Exception: " + fileName + ". " + e);
+			}
+			catch (System.Exception e)
+			{
+				UnityEngine.Debug.LogWarning("Exception: " + fileName + ". " + e);
+			}
+			catch
+			{
+				UnityEngine.Debug.LogWarning("Exception: fell through");
+
+			}
+			finally
+			{
+				
+			}
+		}
     }
 }
