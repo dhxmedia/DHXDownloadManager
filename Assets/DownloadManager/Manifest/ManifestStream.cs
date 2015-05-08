@@ -1,4 +1,4 @@
-﻿﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 using UnityEngine;
@@ -54,11 +54,19 @@ namespace DHXDownloadManager
 
             if (Stream != null)
             {
-                for (int i = 0; i < bytes.Count; i++)
-                {
-                    Stream.Write(bytes[i], 0, bytes[i].Length);
-                }
-                Stream.Flush();
+				try
+				{
+	                for (int i = 0; i < bytes.Count; i++)
+	                {
+	                    Stream.Write(bytes[i], 0, bytes[i].Length);
+	                }
+	                Stream.Flush();
+				}
+				catch (System.Exception e)
+				{
+					Abort ();
+				}
+				finally{}
             }
 
         }
@@ -68,20 +76,31 @@ namespace DHXDownloadManager
 
             if (Stream != null)
             {
-                Stream.Close();
-                if (FinalizeStreamSuccess() == 0)
-                {
-                    if (OnAssetStreamSuccess != null)
-                        OnAssetStreamSuccess(this, Stream);
-                }
-                else
-                {
-                    SetStatus(StatusFlags.Failed);
-
-                    FinalizeStreamFailure();
-                    if (OnAssetStreamFailed != null)
-                        OnAssetStreamFailed(this, Stream);
-                }
+				try
+				{
+					Stream.Close();
+					if (FinalizeStreamSuccess() == 0)
+					{
+						if (OnAssetStreamSuccess != null)
+							OnAssetStreamSuccess(this, Stream);
+					}
+					else
+					{
+						SetStatus(StatusFlags.Failed);
+						
+						FinalizeStreamFailure();
+						if (OnAssetStreamFailed != null)
+							OnAssetStreamFailed(this, Stream);
+					}
+				}
+				catch (System.Exception e)
+				{
+					SetStatus(StatusFlags.Failed);
+					
+					FinalizeStreamFailure();
+					if (OnAssetStreamFailed != null)
+						OnAssetStreamFailed(this, Stream);
+				}
 
                 CloseStream();
             }
@@ -127,11 +146,16 @@ namespace DHXDownloadManager
 
         void CloseStream()
         {
-            if (Stream != null)
-            {
-                Stream.Close();
-                Stream.Dispose();
-            }
+			try
+			{
+	            if (Stream != null)
+	            {
+	                Stream.Close();
+	                Stream.Dispose();
+	            }
+			}
+			catch (System.Exception e){}
+			finally {}
             Stream = null;
         }
 

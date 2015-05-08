@@ -66,6 +66,7 @@ namespace DHXDownloadManager
             }
             catch (Exception e)
             {
+                SetError(ManifestErrors.Unknown);
                 Debug.LogError(e);
                 if (stream != null)
                 { 
@@ -127,6 +128,7 @@ namespace DHXDownloadManager
             }
             catch (Exception e)
             {
+                SetError(ManifestErrors.Unknown);
                 Debug.LogError(e);
                 return 1;
             }
