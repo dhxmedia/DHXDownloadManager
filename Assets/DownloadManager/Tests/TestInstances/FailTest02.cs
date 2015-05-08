@@ -23,13 +23,13 @@ namespace DHXDownloadManager.Tests
             Start();
 
             Manifest metadata = new Manifest("httpfs://s3.amazonaws.com/piko_public/Test.png", 0);
-            _Parent._Manager.AddDownload(ref metadata);
+            _Parent._Manager.AddDownload(metadata);
 
             int succeed = -1;
 
             metadata.OnDownloadFailed += delegate(Manifest m)
             {
-                _Parent._Manager.AddDownload(ref m);
+                _Parent._Manager.AddDownload(m);
                 m.OnDownloadFailed += (m2) => succeed = 1;
             };
 

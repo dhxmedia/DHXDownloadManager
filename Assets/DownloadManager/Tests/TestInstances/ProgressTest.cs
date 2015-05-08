@@ -31,11 +31,10 @@ namespace DHXDownloadManager.Tests
             progress.AddDownload(metadata2);
             progress.AddDownload(metadata3);
 
-            progress.OnProgressEnd += (p) => succeed = 1;
             progress.OnPercentChange += progress_OnPercentChange;
-            _Parent._Manager.AddDownload(ref metadata1);
-            _Parent._Manager.AddDownload(ref metadata2);
-            _Parent._Manager.AddDownload(ref metadata3);
+            _Parent._Manager.AddDownload(metadata1);
+            _Parent._Manager.AddDownload(metadata2);
+            _Parent._Manager.AddDownload(metadata3);
 
             while (succeed == -1)
             {
@@ -57,7 +56,8 @@ namespace DHXDownloadManager.Tests
 
         void progress_OnPercentChange(float percent, int totalBytesDownloaded, int totalBytes)
         {
-
+            if (totalBytesDownloaded >= totalBytes)
+                succeed = 1;
         }
 
     }

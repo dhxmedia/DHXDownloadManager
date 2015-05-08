@@ -25,13 +25,13 @@ namespace DHXDownloadManager.Tests
             int succeed = -1;
 
             Manifest metadata = new Manifest("https://s3.amazonaws.com/piko_public/Test.png", 0);
-            _Parent._Manager.AddDownload(ref metadata);
+            _Parent._Manager.AddDownload(metadata);
             metadata.OnDownloadFinished += (m) => succeed++;
             metadata.OnDownloadFailed += (m) => succeed++;
             Manifest oldManifest = metadata;
 
             metadata = new Manifest("https://s3.amazonaws.com/piko_public/Test.png", 0);
-            _Parent._Manager.AddDownload(ref metadata);
+            _Parent._Manager.AddDownload(metadata);
             metadata.OnDownloadFinished += (m) => succeed++;
             metadata.OnDownloadFailed += (m) => succeed++;
 

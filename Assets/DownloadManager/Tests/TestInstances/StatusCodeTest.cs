@@ -25,7 +25,7 @@ namespace DHXDownloadManager.Tests
             DHXDownloadManager.Manifest manifest = new Manifest("http://dwcmsf4e0wn6r.cloudfront.net/vids/131/mov/440/131_0002.part?Expires=1427833040&Signature=Zk3~jOdn0A7RIMIho7qf9RGg6Xcu4lSEsDijAnY3P9iDUl68puWNEeS8jiE2kSU8E8X4KuW1sPagIaeeErAlI4X~AaXpiJs3If382rJm6kCEgj7pesGmZyOYjaSgZlQyueROC3dPPhn8V9Xtmv62TDljXQbmoqs~Aik0JUpBV4U_&Key-Pair-Id=APKAI4VUXALFIQ4JTKFAf", Manifest.Flags.None);
             manifest.OnDownloadFailed += manifest_OnDownloadFailed;
             manifest.OnDownloadFinished += manifest_OnDownloadFinished;
-            _Parent._Manager.AddDownload(ref manifest);
+            _Parent._Manager.AddDownload(manifest);
             while (succeed == -1)
                 yield return new WaitForFixedUpdate();
             Finish();

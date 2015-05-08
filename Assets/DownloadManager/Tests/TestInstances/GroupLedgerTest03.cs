@@ -35,7 +35,7 @@ namespace DHXDownloadManager.Tests
             for (int i = 0; i < manifests.Count; i++)
             {
                 Manifest manifest = manifests[i];
-                _Parent._Manager.AddDownload(ref manifest);
+                _Parent._Manager.AddDownload(manifest);
                 manifests[i] = manifest;
             }
 
@@ -55,7 +55,7 @@ namespace DHXDownloadManager.Tests
                 }
             }
             Group group2 = _Parent._GroupLedger.AddGetGroup("GroupLedgerTest03");
-            if (group.Status == Group.StatusFlags.Destroyed && manifestDestroyed && group2 != group)
+            if (group.Status == Group.StatusFlags.Destroyed && manifestDestroyed && group2 == group)
                 Success();
             else
                 Fail();

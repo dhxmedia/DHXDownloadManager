@@ -30,7 +30,7 @@ namespace DHXDownloadManager.Tests
             Date = System.DateTime.UtcNow.Ticks;
             metadata.POSTFieldKVP["Date"] = Date.ToString();
 
-            _Parent._Manager.AddDownload(ref metadata);
+            _Parent._Manager.AddDownload(metadata);
 
             while (succeed == -1)
             {

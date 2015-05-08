@@ -26,7 +26,7 @@ namespace DHXDownloadManager.Tests
             metadata.OnDownloadStarted += (m) => succeed = -1;
             metadata.OnDownloadFinished += (m) => succeed = 1;
             metadata.OnDownloadFailed += (m) => succeed = 0;
-            _Parent._Manager.AddDownload(ref metadata);
+            _Parent._Manager.AddDownload(metadata);
 
 
             while (succeed == -1)

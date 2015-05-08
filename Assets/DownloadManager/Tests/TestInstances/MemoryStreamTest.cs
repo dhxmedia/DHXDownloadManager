@@ -28,7 +28,7 @@ namespace DHXDownloadManager.Tests
             Manifest metadata = new ManifestMemoryStream("https://s3.amazonaws.com/piko_public/Test.png", ManifestFileStream.Flags.None);
             ((ManifestStream)(metadata)).OnAssetStreamFailed += FileStreamTest_OnAssetStreamFailed;
             ((ManifestStream)(metadata)).OnAssetStreamSuccess += FileStreamTest_OnAssetStreamSuccess;
-            _Parent._Manager.AddDownload(ref metadata);
+            _Parent._Manager.AddDownload(metadata);
 
             while (succeed == -1)
             {

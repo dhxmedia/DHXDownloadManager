@@ -32,7 +32,7 @@ namespace DHXDownloadManager.Tests
             metadata.OnDownloadFinished += (m) => succeed = 0;
             metadata.OnDownloadFailed += (m) => succeed = 1;
             _Parent._Ledger.AddDownload(ref metadata);
-            _Parent._Manager.AddDownload(ref metadata);
+            _Parent._Manager.AddDownload(metadata);
             while (succeed == -1)
             {
                 yield return null;

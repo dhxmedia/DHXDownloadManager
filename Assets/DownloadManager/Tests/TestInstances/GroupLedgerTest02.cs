@@ -35,7 +35,7 @@ namespace DHXDownloadManager.Tests
             for (int i = 0; i < manifests.Count; i++)
             {
                 Manifest manifest = manifests[i];
-                _Parent._Manager.AddDownload(ref manifest);
+                _Parent._Manager.AddDownload(manifest);
                 manifests[i] = manifest;
             }
 
@@ -48,7 +48,7 @@ namespace DHXDownloadManager.Tests
 
             manifests[0].Destroy();
 
-            if (group.Status == Group.StatusFlags.Incomplete)
+            if (group.Status == Group.StatusFlags.Destroyed)
                 Success();
             else
                 Fail();
