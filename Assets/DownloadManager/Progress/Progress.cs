@@ -19,9 +19,6 @@ namespace DHXDownloadManager
 	    public delegate void OnPercentChangeDelegate(float percent, int totalBytesDownloaded, int totalBytes);
         public event OnPercentChangeDelegate OnPercentChange;
 
-        public event System.Action<Progress> OnProgressStart;
-        public event System.Action<Progress> OnProgressEnd;
-        int _DownloadingCount = 0;
         int _TotalBytes = 0;
         int _DownloadedBytes = 0;
 
@@ -34,75 +31,15 @@ namespace DHXDownloadManager
 
 	    }
 	
-	    void OnDownloadingStart()
-	    {
-		    _Downloading = true;
-            if (OnPercentChange != null)
-                OnPercentChange(0, 0, 0);
-            if (OnProgressStart != null)
-                OnProgressStart(this);
-	    }
 	
-	    void OnDownloadingEnd()
-	    {
-            Clear();
-            if (OnPercentChange != null)
-                OnPercentChange(1.0f, _DownloadedBytes, _TotalBytes);
-            if (OnProgressEnd != null)
-                OnProgressEnd(this);
-	    }
-
         public void AddDownload(Manifest metadata)
 	    {
             if (_Manifests.Contains(metadata) == false)
             {
-                if (metadata.Status != Manifest.StatusFlags.Destroyed
-                    && metadata.Status != Manifest.StatusFlags.Finished
-                    && metadata.Status != Manifest.StatusFlags.Failed)
-                {
-                    _Manifests.Add(metadata);
-                    metadata.OnDownloadedBytes += OnDownloadedBytes;
-                    metadata.OnStatusChanged += metadata_OnStatusChanged;
-                    metadata_OnStatusChanged(metadata, true);
-                }
+                _Manifests.Add(metadata);
+                metadata.OnDownloadedBytes += OnDownloadedBytes;
             }
 	    }
-
-        void metadata_OnStatusChanged(Manifest obj, bool firstLoad)
-        {
-
-            if (obj.Status == Manifest.StatusFlags.Destroyed
-                || obj.Status == Manifest.StatusFlags.Finished
-                || obj.Status == Manifest.StatusFlags.Failed)
-            {
-                _DownloadingCount--;
-            }
-
-            // This was something that was downloading, but is now set to None status (used in Retry)
-            if(firstLoad == false)
-            {
-                if (obj.Status == Manifest.StatusFlags.None)
-                {
-                    _DownloadingCount--;
-                }
-            }
-            if (obj.Status == Manifest.StatusFlags.Queued)
-            {
-                _DownloadingCount++;
-                if (_Downloading == false)
-                    OnDownloadingStart();
-            }
-            if (_DownloadingCount <= 0)
-            {
-                if (_Downloading == true)
-                    OnDownloadingEnd();
-            }
-        }
-
-        void metadata_OnStatusChanged(Manifest obj)
-        {
-            metadata_OnStatusChanged(obj, false);
-        }
 
         void OnDownloadedBytes(Manifest metadata, int _bytesDownloaded, int _bytesTotal)
 	    {
@@ -125,7 +62,6 @@ namespace DHXDownloadManager
             _Downloading = false;
             foreach (Manifest manifest in _Manifests)
             {
-                manifest.OnStatusChanged -= metadata_OnStatusChanged;
                 manifest.OnDownloadedBytes -= OnDownloadedBytes;
             }
             _Manifests.Clear();
