@@ -60,9 +60,9 @@ namespace DHXDownloadManager
                 OnDownloadingStart();
         }
 
-        public void AddDownload(ref Manifest metadata)
+        public void AddDownload(Manifest metadata)
         {
-            _Manager.AddDownload(ref metadata);
+            _Manager.AddDownload(metadata);
         }
 
     }

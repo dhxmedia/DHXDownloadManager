@@ -19,6 +19,6 @@ namespace DHXDownloadManager
         event OnDownloadedAddedDelegate OnDownloadAdded;
         event OnDownloadingStartDelegate OnDownloadingStart;
         event OnDownloadingEndDelegate OnDownloadingEnd;
-        void AddDownload(ref Manifest metadata);
+        void AddDownload(Manifest metadata);
     }
 }

@@ -153,7 +153,7 @@ namespace DHXDownloadManager
                 if ((m.Status == Manifest.StatusFlags.Failed) || (m.Status == Manifest.StatusFlags.Downloading) || (m.Status == Manifest.StatusFlags.Queued) || (m.Status == Manifest.StatusFlags.None))
                 {
                     Manifest oldManifest = m;
-                    _Manager.AddDownload(ref m);
+                    _Manager.AddDownload(m);
                     if (m != oldManifest)
                         throw new System.Exception("DownloadLedger: This shouldn't happen. There was probably a mix of ledger and non ledger downloads. Currently unhandled");
 

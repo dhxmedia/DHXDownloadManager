@@ -17,10 +17,10 @@ namespace DHXDownloadManager
 	    bool _Processing = false;
 	    int _DownloadingCount = 0;
 
-        List<Manifest> _Requests = new List<Manifest>();
+        List<Manifest> _HighRequests = new List<Manifest>();
+        List<Manifest> _LowRequests = new List<Manifest>();
 	    public int MaxDownloadCount = 2;
 
-        Dictionary<string, Manifest> _URLMap = new Dictionary<string, Manifest>();
         T _DownloadEngine;
         List<Manifest> _ActiveDownloads = new List<Manifest>();
 
@@ -45,9 +45,8 @@ namespace DHXDownloadManager
             metadata.OnAbort -= request_OnAbort;
             metadata.__Retry();
             _ActiveDownloads.Remove(metadata);
-            _URLMap.Remove(metadata.RelativePath);
             _DownloadingCount--;
-            AddDownload(ref metadata);
+            AddDownload(metadata);
         }
 
         void ClearDownload(Manifest metadata)
@@ -58,23 +57,28 @@ namespace DHXDownloadManager
             _ActiveDownloads.Remove(metadata);
             metadata.__ClearManifest();
             _DownloadingCount--;
-            if (_URLMap.ContainsKey(metadata.RelativePath))
-            {
-                _URLMap.Remove(metadata.RelativePath);
-            }
 	    }
 
 
 	    void StartNextDownload()
         {
             if (Verbose)
-                Debug.Log("DownloadManager::StartNextDownload: " + _Requests.Count + ":" + _DownloadingCount);
-		    if(_Requests.Count > 0)
+                Debug.Log("DownloadManager::StartNextDownload: " + _LowRequests.Count + ":" + _HighRequests.Count + ":" + _DownloadingCount);
+            if (_LowRequests.Count > 0 || _HighRequests.Count > 0)
 		    {
                 if (_DownloadingCount < MaxDownloadCount)
                 {
-                    Manifest request = _Requests[0];
-                    _Requests.RemoveAt(0);
+                    Manifest request = null;
+                    if (_HighRequests.Count > 0)
+                    {
+                        request = _HighRequests[0];
+                        _HighRequests.RemoveAt(0);
+                    }
+                    else
+                    {
+                        request = _LowRequests[0];
+                        _LowRequests.RemoveAt(0);
+                    }
                     if (request.Status == Manifest.StatusFlags.Queued || request.Status == Manifest.StatusFlags.None)
                     {
                         _DownloadingCount++;
@@ -114,10 +118,10 @@ namespace DHXDownloadManager
             _AbortRequest(obj);
         }
 
-        public void AddDownload(ref Manifest metadata)
+        public void AddDownload(Manifest metadata)
         {
 
-            if (metadata.IsActive == false && _URLMap.ContainsKey(metadata.RelativePath) == false)
+            if (metadata.IsActive == false)
             {
 
                 if (Verbose)
@@ -128,10 +132,9 @@ namespace DHXDownloadManager
                     // Or wait until we're done our next download if we are
                     metadata.__Queue(); 
                     if (metadata.Priority == Manifest.QueuePriority.Low)
-                        _Requests.Add(metadata);
+                        _LowRequests.Add(metadata);
                     else
-                        _Requests.Insert(0, metadata);
-                    _URLMap[metadata.RelativePath] = metadata;
+                        _HighRequests.Add(metadata);
                     if (_Processing == false)
                     {
                         _Processing = true;
@@ -163,22 +166,6 @@ namespace DHXDownloadManager
                     Debug.LogError("Failed to AddDownload " + metadata.URL + ". " + e);
                 }
                 finally { }
-            }
-            else
-            {
-                int ID = metadata.ID;
-                metadata = _URLMap[metadata.RelativePath];
-                if(ID != metadata.ID)
-                {
-                    
-                    if(ID >= 0)
-                    {
-                        if (metadata.ID >= 0)
-                            throw new System.Exception("DownloadManager: This shouldn't happen. There was probably a mix of ledger and non ledger downloads. Currently unhandled");
-
-                        metadata.ID = ID;
-                    }
-                }
             }
 
         }
