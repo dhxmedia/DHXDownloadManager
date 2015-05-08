@@ -121,7 +121,6 @@ namespace DHXDownloadManager
         protected int _BytesDownloaded;
         public int BytesDownloaded { get { return _BytesDownloaded; } }
 
-        [field: System.NonSerialized]
         protected int _TotalBytesSize;
         public int TotalBytesSize { get { return _TotalBytesSize; } }
 
@@ -139,6 +138,7 @@ namespace DHXDownloadManager
 
         public Manifest()
         {
+            _Priority = QueuePriority.High;
             ID = -1;
             Flag = Flags.None;
             LastPingTime = 5.0f;
@@ -149,6 +149,7 @@ namespace DHXDownloadManager
 
         public Manifest(string url, Flags flag)
         {
+            _Priority = QueuePriority.High;
             ID = -1;
             Flag = flag;
             URL = url;
@@ -163,6 +164,7 @@ namespace DHXDownloadManager
         /// </summary>
         virtual public void __Start()
         {
+            _BytesDownloaded = 0;
             _Errors = 0;
             SetStatus(StatusFlags.Downloading);
             ResponseCode = -1;
@@ -225,6 +227,7 @@ namespace DHXDownloadManager
         /// </summary>
         public virtual void Destroy()
         {
+            _BytesDownloaded = 0;
             if (IsActive)
                 Abort();
             SetStatus(StatusFlags.Destroyed);
