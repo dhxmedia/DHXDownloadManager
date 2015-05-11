@@ -9,6 +9,7 @@ DHXDownloadManager is used as a central place to collate downloads. Instead of h
 * Restarting failed downloads on app restart
 * Progress callbacks for individual files and groups of files
 * Comes with a set of unit tests
+
 ## Sample code
 ```
 // this will save to Application.persistentDataPath/piko_public/Test.png
