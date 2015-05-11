@@ -1,6 +1,6 @@
 # DHXDownloadManager
 ## What is this used for?
-DHXDownloadManager is used as a central place to collate downloads. Instead of having requests in various parts of your program, it provides a central interface for downloading. 
+DHXDownloadManager is used as a central place to collate downloads. Instead of having requests in various parts of your program, it provides a central interface for downloading. It is primarily used for Unity, but future plans are to decouple it where needed.
 ## Why is it cool?
 * Multiple download engines so you're not locked down to a particular library. Supports Unitys WWW class and BestHTTP and is easy to extend to others.
 * Saving to file automatically using the relative path in the URL is supported
